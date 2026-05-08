@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cobra - Video Editor | Frost</title>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#050a14;--bg2:#0a1020;--card:rgba(100,180,255,0.04);
+      --accent:#00b4d8;--accent2:#90e0ef;--accent3:#0077b6;
+      --text:#e0f0ff;--dim:#6b8fad;
+      --glow:0 0 40px rgba(0,180,216,0.25);
+      --r:20px;--t:0.4s cubic-bezier(.25,.46,.45,.94);
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+    a{color:inherit;text-decoration:none}
+
+    .nav{position:fixed;top:0;left:0;width:100%;z-index:999;padding:1.2rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(5,10,20,0.75);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,180,216,0.08)}
+    .nav .logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px}
+    .nav-links{display:flex;gap:2rem;list-style:none}
+    .nav-links a{font-size:.88rem;font-weight:600;color:var(--dim);transition:color var(--t);position:relative}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:50%;width:0;height:2px;background:var(--accent);transition:width var(--t),left var(--t);border-radius:2px}
+    .nav-links a:hover{color:var(--text)}.nav-links a:hover::after{width:100%;left:0}
+    .mob-tog{display:none;background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer}
+
+    .hero{position:relative;min-height:0;height:auto;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:5.5rem 3rem 1.5rem}
+    .hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 180deg at 50% 50%,rgba(0,180,216,0.06) 0deg,transparent 60deg,rgba(144,224,239,0.04) 120deg,transparent 180deg,rgba(0,119,182,0.06) 240deg,transparent 300deg)}
+    .hero video{position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;transform:translate(-50%,-50%);opacity:.1;object-fit:cover;pointer-events:none}
+    .hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 20%,var(--bg) 70%)}
+    .hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1.2fr;gap:2rem;align-items:center;width:100%;margin:0 auto;max-width:none;padding:0}
+    .hero-c{padding:0 0 0 5%;text-align:center}
+    .hero-featured{padding:0 3% 0 0}
+    .hero-c h1{font-size:clamp(3.5rem,9vw,8rem);font-weight:800;line-height:.9;letter-spacing:-3px;background:linear-gradient(180deg,#fff 0%,var(--accent2) 50%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:hIn 1s ease-out}
+    .hero-c .tag{font-size:clamp(.9rem,1.8vw,1.2rem);color:var(--dim);margin-top:1.2rem;letter-spacing:4px;text-transform:uppercase;font-weight:400;animation:hIn 1s ease-out .2s both}
+    .hero-cta{display:inline-flex;align-items:center;gap:.5rem;margin-top:2.5rem;padding:1rem 2.5rem;background:transparent;color:var(--accent);font-weight:700;font-size:1.05rem;border:2px solid var(--accent);border-radius:60px;cursor:pointer;transition:all var(--t);animation:hIn 1s ease-out .4s both;text-decoration:none}
+    .hero-cta:hover{background:var(--accent);color:#000;box-shadow:0 0 40px rgba(0,180,216,0.4);transform:translateY(-2px)}
+    /* Featured video in hero */
+    .hero-featured{animation:hIn 1s ease-out .3s both}
+    .hero-featured .feat-card{background:rgba(0,180,216,0.04);border:1px solid rgba(0,180,216,0.12);border-radius:var(--r);overflow:hidden;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:box-shadow var(--t),border-color var(--t)}
+    .hero-featured .feat-card:hover{box-shadow:0 0 60px rgba(0,180,216,0.2);border-color:rgba(0,180,216,0.3)}
+    .hero-featured .feat-vw{position:relative;width:100%;padding-top:56.25%;background:#000}
+    .hero-featured .feat-vw iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+    .scroll-h{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:2;animation:bounce 2s infinite}
+    .scroll-h span{display:block;width:22px;height:22px;border-right:2px solid var(--dim);border-bottom:2px solid var(--dim);transform:rotate(45deg)}
+    @keyframes bounce{0%,20%,50%,80%,100%{transform:translateX(-50%) translateY(0)}40%{transform:translateX(-50%) translateY(-10px)}}
+    @keyframes hIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+    section{padding:6rem 2rem}.container{max-width:1200px;margin:0 auto}
+    .stitle{text-align:center;font-size:clamp(2rem,5vw,3.5rem);font-weight:800;margin-bottom:1rem}
+    .stitle .g{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .ssub{text-align:center;color:var(--dim);font-size:1rem;max-width:600px;margin:0 auto 3.5rem}
+    .reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease}.reveal.v{opacity:1;transform:translateY(0)}
+    .reveal-pop{opacity:0;transform:scale(.8) translateY(30px);transition:opacity .6s ease-out,transform .6s cubic-bezier(.34,1.56,.64,1)}.reveal-pop.v{opacity:1;transform:scale(1) translateY(0)}
+
+    /* Glassmorphism cards */
+    .glass{background:rgba(0,180,216,0.04);border:1px solid rgba(0,180,216,0.1);border-radius:var(--r);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+
+    .cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1.5rem}
+    .cc{padding:1.5rem 1rem;text-align:center;transition:transform var(--t),box-shadow var(--t),border-color var(--t)}
+    .cc:hover{transform:translateY(-8px);box-shadow:var(--glow);border-color:rgba(0,180,216,0.3)}
+    .cc-av{width:80px;height:80px;border-radius:50%;margin:0 auto 1rem;background:linear-gradient(135deg,var(--accent3),var(--accent));display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;color:#fff;box-shadow:0 0 20px rgba(0,180,216,0.2)}
+    .cc h4{font-size:.95rem;font-weight:700;margin-bottom:.25rem}.cc .subs{font-size:.8rem;color:var(--dim)}
+
+    .wg{display:flex;flex-direction:column;gap:6rem}
+    .wc{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;background:none;border:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-radius:0}
+    .wc:nth-child(even) .vw{order:2}
+    .wc:nth-child(even) .wi{order:1;text-align:right;align-items:flex-end}
+    .wc .vw{position:relative;width:100%;padding-top:56.25%;background:#000;border-radius:var(--r);overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.4);transition:transform var(--t),box-shadow var(--t)}
+    .wc .vw:hover{transform:scale(1.02);box-shadow:0 12px 60px rgba(0,180,216,0.15)}
+    .wc iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+    .wc .wi{padding:1rem 0;display:flex;flex-direction:column;justify-content:center}
+    .wc .cn{font-size:clamp(2.5rem,5vw,4.5rem);font-weight:800;letter-spacing:-1.5px;line-height:1}
+    .wc .vc{display:inline-block;margin-top:1rem;padding:.4rem 1.1rem;background:rgba(0,180,216,0.1);border:1px solid rgba(0,180,216,0.25);border-radius:30px;font-size:.95rem;font-weight:700;color:var(--accent2);letter-spacing:1px;width:fit-content}
+
+
+
+    .stats-s{background:linear-gradient(180deg,rgba(0,180,216,0.05),rgba(0,119,182,0.03));border-top:1px solid rgba(0,180,216,0.08);border-bottom:1px solid rgba(0,180,216,0.08)}
+    .sg{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;text-align:center}
+    .si .sn{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .si .sl{font-size:.85rem;color:var(--dim);text-transform:uppercase;letter-spacing:2px;margin-top:.25rem;font-weight:600}
+
+    .hire{text-align:center}
+    .hs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2rem;margin-bottom:3rem}
+    .hstep{padding:2rem 1.5rem;transition:transform var(--t),box-shadow var(--t),border-color var(--t)}
+    .hstep:hover{transform:translateY(-6px);box-shadow:var(--glow);border-color:rgba(0,180,216,0.3)}
+    .hstep .num{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),var(--accent));font-weight:800;font-size:1.2rem;margin-bottom:1rem;color:#fff}
+    .hstep h4{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}.hstep p{font-size:.9rem;color:var(--dim)}
+    .dm-btn{display:inline-flex;align-items:center;gap:.75rem;padding:1.1rem 3rem;font-size:1.15rem;font-weight:700;background:linear-gradient(135deg,var(--accent3),var(--accent));color:#fff;border:none;border-radius:60px;cursor:pointer;transition:transform var(--t),box-shadow var(--t);text-decoration:none}
+    .dm-btn:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 0 50px rgba(0,180,216,0.4)}
+    .dm-btn svg{width:22px;height:22px;fill:currentColor}
+
+    footer{background:#000;padding:3rem 2rem;text-align:center;border-top:1px solid rgba(0,180,216,0.06)}
+    .f-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 2rem;background:var(--accent);color:#000;font-weight:700;font-size:.95rem;border-radius:60px;border:none;cursor:pointer;text-decoration:none;transition:transform var(--t),box-shadow var(--t)}
+    .f-btn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 0 30px rgba(0,180,216,0.3)}
+    .f-btn svg{width:18px;height:18px;fill:currentColor}
+    .f-copy{color:var(--dim);font-size:.8rem;margin-top:1.5rem}
+
+    @media(max-width:768px){
+      .nav{padding:1rem 1.5rem}
+      .nav-links{display:none;flex-direction:column;position:absolute;top:100%;left:0;width:100%;background:rgba(5,10,20,.95);backdrop-filter:blur(20px);padding:1.5rem 2rem;gap:1.25rem}
+      .nav-links.open{display:flex}.mob-tog{display:block}
+      .hero{padding:7rem 1.5rem 3rem}
+      .hero-inner{grid-template-columns:1fr;text-align:center}
+      .hero-featured{margin-top:1.5rem}
+      section{padding:4rem 1.25rem}
+      .cg{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:1rem}
+      .sg{grid-template-columns:1fr;gap:1.5rem}
+      .tg{grid-template-columns:1fr}
+      .wc{grid-template-columns:1fr!important;gap:1.5rem}
+      .wc .vw{order:1!important}
+      .wc .wi{order:2!important}
+    }
+  </style>
+</head>
+<body>
+<nav class="nav">
+  <div class="logo">COBRA</div>
+  <ul class="nav-links" id="navLinks"><li><a href="#hero">Home</a></li><li><a href="#work">Work</a></li><li><a href="#hire">Hire Me</a></li></ul>
+  <button class="mob-tog" id="mobTog" aria-label="Menu">&#9776;</button>
+</nav>
+
+<section class="hero" id="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <div class="hero-c">
+      <h1>COBRA</h1>
+      <p class="tag">Edits that hold attention</p>
+      <a href="#hire" class="hero-cta">Work With Cobra</a>
+    </div>
+    <div class="hero-featured">
+      <div class="feat-card">
+        <div class="feat-vw">
+          <iframe src="https://www.youtube-nocookie.com/embed/SaTK5uzKA2g?rel=0&loop=0&controls=1&cc_load_policy=0&autoplay=0" title="Featured Edit" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="work" style="padding-top:6rem;padding-left:4rem;padding-right:4rem"><div style="max-width:100%;margin:0 auto">
+  <div class="wg">
+    <div class="wc"><div class="vw"><iframe src="https://www.youtube.com/embed/iQF8GP8BhLk" title="Video 1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div><div class="wi"><h3 class="cn">Client Name</h3></div></div>
+    <div class="wc reveal"><div class="vw"><iframe src="about:blank" title="Video 2" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div><div class="wi"><h3 class="cn reveal-pop">Client Name</h3></div></div>
+    <div class="wc reveal"><div class="vw"><iframe src="about:blank" title="Video 3" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div><div class="wi"><h3 class="cn reveal-pop">Client Name</h3></div></div>
+    <div class="wc reveal"><div class="vw"><iframe src="about:blank" title="Video 4" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div><div class="wi"><h3 class="cn reveal-pop">Client Name</h3></div></div>
+  </div>
+</div></section>
+
+
+
+
+<section class="hire" id="hire"><div class="container">
+  <h2 class="stitle reveal">How To <span class="g">Hire Me</span></h2>
+  <p class="ssub reveal">Simple, transparent, and fast.</p>
+  <div class="hs">
+    <div class="hstep glass reveal"><div class="num">1</div><h4>Send a DM</h4><p>Reach out on X/Twitter with a brief overview of your channel.</p></div>
+    <div class="hstep glass reveal"><div class="num">2</div><h4>We Chat</h4><p>I'll ask about your style, pacing preferences, and content goals.</p></div>
+    <div class="hstep glass reveal"><div class="num">3</div><h4>I Edit, You Grow</h4><p>I deliver edits that keep viewers watching until the very end.</p></div>
+  </div>
+  <a href="https://x.com/thevfxcobra" target="_blank" rel="noopener" class="dm-btn reveal">
+    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    Send Cobra a DM
+  </a>
+</div></section>
+
+
+<script>
+document.getElementById('mobTog').addEventListener('click',()=>document.getElementById('navLinks').classList.toggle('open'));
+document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('open')));
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){const s=e.target.parentElement.querySelectorAll('.reveal,.reveal-pop');e.target.style.transitionDelay=`${Array.from(s).indexOf(e.target)*.08}s`;e.target.classList.add('v');obs.unobserve(e.target)}})},{threshold:.15,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal,.reveal-pop').forEach(el=>obs.observe(el));
+const sobs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){const el=e.target,t=parseInt(el.dataset.target),sf=el.textContent.replace(/[0-9]/g,'');let c=0;const st=Math.max(1,Math.floor(t/60)),iv=setInterval(()=>{c+=st;if(c>=t){c=t;clearInterval(iv)}el.textContent=c+sf},25);sobs.unobserve(el)}})},{threshold:.5});
+document.querySelectorAll('.sn[data-target]').forEach(el=>sobs.observe(el));
+</script>
+</body>
+</html>
