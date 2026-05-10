@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cobra - Video Editor | Frost</title>
-  <link rel="icon" type="image/png" href="/assets/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -78,7 +77,12 @@
     .wc .cn{font-size:clamp(2.5rem,5vw,4.5rem);font-weight:800;letter-spacing:-1.5px;line-height:1}
     .wc .vc{display:inline-block;margin-top:1rem;padding:.4rem 1.1rem;background:rgba(0,180,216,0.1);border:1px solid rgba(0,180,216,0.25);border-radius:30px;font-size:.95rem;font-weight:700;color:var(--accent2);letter-spacing:1px;width:fit-content}
 
-
+    .tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem}
+    .tc{padding:2rem;transition:transform var(--t),box-shadow var(--t),border-color var(--t)}
+    .tc:hover{transform:translateY(-6px);box-shadow:var(--glow);border-color:rgba(0,180,216,0.3)}
+    .tc .stars{font-size:1.2rem;margin-bottom:1rem}
+    .tc .txt{font-size:.95rem;color:var(--dim);line-height:1.7;margin-bottom:1.25rem;font-style:italic}
+    .tc .auth{font-weight:700;font-size:.9rem}
 
     .stats-s{background:linear-gradient(180deg,rgba(0,180,216,0.05),rgba(0,119,182,0.03));border-top:1px solid rgba(0,180,216,0.08);border-bottom:1px solid rgba(0,180,216,0.08)}
     .sg{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;text-align:center}
@@ -121,7 +125,7 @@
 <body>
 <nav class="nav">
   <div class="logo">COBRA</div>
-  <ul class="nav-links" id="navLinks"><li><a href="#hero">Home</a></li><li><a href="#work">Work</a></li><li><a href="#hire">Hire Me</a></li></ul>
+  <ul class="nav-links" id="navLinks"><li><a href="#hero">Home</a></li><li><a href="#work">Work</a></li><li><a href="#testimonials">Testimonials</a></li><li><a href="#hire">Hire Me</a></li></ul>
   <button class="mob-tog" id="mobTog" aria-label="Menu">&#9776;</button>
 </nav>
 
@@ -145,15 +149,24 @@
 
 <section id="work" style="padding-top:6rem;padding-left:4rem;padding-right:4rem"><div style="max-width:100%;margin:0 auto">
   <div class="wg">
-    <div class="wc"><div class="vw"><iframe src="https://www.youtube.com/embed/iQF8GP8BhLk" title="Video 1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div><div class="wi"><h3 class="cn">Client Name</h3></div></div>
-    <div class="wc reveal"><div class="vw"><iframe src="about:blank" title="Video 2" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div><div class="wi"><h3 class="cn reveal-pop">Client Name</h3></div></div>
-    <div class="wc reveal"><div class="vw"><iframe src="about:blank" title="Video 3" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div><div class="wi"><h3 class="cn reveal-pop">Client Name</h3></div></div>
-    <div class="wc reveal"><div class="vw"><iframe src="about:blank" title="Video 4" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div><div class="wi"><h3 class="cn reveal-pop">Client Name</h3></div></div>
+    <div class="wc"><div class="vw"><iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div><div class="wi"><h3 class="cn">Client Name</h3></div></div>
+    <div class="wc reveal"><div class="vw"><iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 2" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div><div class="wi"><h3 class="cn reveal-pop">Client Name</h3></div></div>
+    <div class="wc reveal"><div class="vw"><iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 3" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div><div class="wi"><h3 class="cn reveal-pop">Client Name</h3></div></div>
+    <div class="wc reveal"><div class="vw"><iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 4" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div><div class="wi"><h3 class="cn reveal-pop">Client Name</h3></div></div>
   </div>
 </div></section>
 
 
 
+<section id="testimonials"><div class="container">
+  <h2 class="stitle reveal">What Creators <span class="g">Say</span></h2>
+  <p class="ssub reveal">Don't just take my word for it.</p>
+  <div class="tg">
+    <div class="tc glass reveal"><div class="stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div><p class="txt">"Cobra completely transformed my content. The edits are clean, punchy, and my retention has never been higher."</p><p class="auth">Client Name</p></div>
+    <div class="tc glass reveal"><div class="stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div><p class="txt">"Fast turnaround, incredible attention to detail, and always nails the vision. I don't trust anyone else with my videos."</p><p class="auth">Client Name</p></div>
+    <div class="tc glass reveal"><div class="stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div><p class="txt">"Every video Cobra edits outperforms the last. The pacing, effects, and storytelling are on another level."</p><p class="auth">Client Name</p></div>
+  </div>
+</div></section>
 
 <section class="hire" id="hire"><div class="container">
   <h2 class="stitle reveal">How To <span class="g">Hire Me</span></h2>
